@@ -3,7 +3,12 @@ import React from "react";
 
 async function fetchRepoContents(name: string) {
   const response = await fetch(
-    `https://api.github.com/repos/bradtraversy/${name}/contents`
+    `https://api.github.com/repos/bradtraversy/${name}/contents`,
+    {
+      next: {
+        revalidate: 60,
+      },
+    }
   );
 
   await new Promise((resolve) => setTimeout(resolve, 1000));

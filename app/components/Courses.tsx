@@ -2,7 +2,11 @@ import Link from "next/link";
 import React from "react";
 
 async function fetchCourses() {
-  const response = await fetch("http://localhost:3000/api/courses");
+  const response = await fetch("http://localhost:3000/api/courses", {
+    next: {
+      revalidate: 0,
+    },
+  });
   const courses = response.json();
   return courses;
 }

@@ -1,11 +1,38 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Courses from "./components/Courses";
+import LoadingPage from "./loading";
+import CourseSearch from "./components/CourseSearch";
 
 const HomePage = () => {
+  const [courses, setCourses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  async function fetchCourses() {
+    const response = await fetch("http://localhost:3000/api/courses", {
+      next: {
+        revalidate: 0,
+      },
+    });
+    const courses = await response.json();
+    setCourses(courses);
+    setLoading(false);
+  }
+
+  if (loading) return <LoadingPage />;
+
   return (
     <div>
       <h1>Course App</h1>
-      <Courses />
+      <CourseSearch
+        getSearchResults={(searchResult: any[]) => setCourses(searchResult)}
+      />
+      <Courses {...{ courses }} />
     </div>
   );
 };
